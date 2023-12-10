@@ -1,0 +1,110 @@
+import React, { useState, useEffect } from 'react';
+import Select from './useSelect';
+function App() {
+	const [region, setRegion] = useState([]);
+	const [provincia, setProvincia] = useState([]);
+	const [ciudad, setCiudad] = useState([]);
+	const [calle, setCalle] = useState([]);
+
+	const [regionSelected, setRegionSelect] = useState(null);
+	const [provinciaSelected, setProvinciaSelect] = useState(null);
+	const [ciudadSelected, setCiudadSelect] = useState(null);
+	const [calleSelected, setCalleSelect] = useState(null);
+
+	//const [itemSelect, setItemSelect] = useState([])
+
+	// function handleSelect(event) {
+	// 	const { name, value } = event.target
+	// 	console.log('name', name)
+	// 	console.log('value', value)
+	// 	setItemSelect((prev) => {
+	// 		return {
+	// 			...prev,
+	// 			[name]: value,
+	// 		}
+	// 	})
+	// }
+
+	function handleSelect(event) {
+		const { name, value } = event.target
+		console.log('name', name)
+		console.log('value', value)
+	}
+
+	useEffect(() => {
+		fetch('http://127.0.0.1:8000/api/direccion')
+			.then(response => response.json())
+			.then(data => setRegion(data))
+			.catch(error => console.log(error))
+	}, [])
+
+	useEffect(() => {
+		fetch(`http://127.0.0.1:8000/api/direccion/${regionSelected}/provincia`)
+			.then(response => response.json())
+			.then(data => setProvincia(data.$provincias))
+			.catch(error => console.log(error))
+	}, [])
+
+	useEffect(() => {
+		if (provinciaSelected) {
+			fetch(`http://127.0.0.1:8000/api/direccion/${provinciaSelected}/ciudad`)
+				.then(response => response.json())
+				.then(data => setCiudad(data.$ciudades))
+
+		}
+	}, [provinciaSelected])
+
+	useEffect(() => {
+		if (ciudadSelected && provinciaSelected) {
+			fetch(`http://127.0.0.1:8000/api/direccion/${calleSelected}/calle`)
+				.then(response => response.json())
+				.then(data => setCalle(data.$calles))
+		}
+
+	}, [ciudadSelected, provinciaSelected])
+
+	return (
+		<div className="main">
+			<h1>App Direcciones</h1>
+			<div className='leftSide'>
+				<label htmlFor="region">Region</label>
+				<Select
+					onChange={handleSelect}
+					id='region'
+					name='region'
+					data={region}>
+				</Select>
+
+				<label htmlFor="provincia">Provincia</label>
+				<Select
+					id='provincia'
+					name='provincia'
+					data={provincia}
+					onChange={handleSelect}>
+				</Select>
+
+				<label htmlFor="ciudad">Ciudad</label>
+				<Select
+					id='ciudad'
+					name='ciudad'
+					data={ciudad}
+					onChange={handleSelect}>
+				</Select>
+			</div>
+			<div className='rightSide'>
+				<ul>
+					<li>
+						<h4>Calle por region</h4>
+					</li>
+					{calle.map((item, idx) => {
+						return (
+							<li key={idx}>{item.nombre}</li>
+						)
+					})}
+				</ul>
+			</div>
+		</div>
+	);
+}
+
+export default App;

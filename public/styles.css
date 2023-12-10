@@ -1,0 +1,53 @@
+body {
+	margin: 0;
+	padding: 0;
+}
+.main {
+	width: 1200px;
+	margin: 0 auto;
+}
+.main h1 {
+	text-align: center;
+	margin-bottom: 20px;
+}
+.leftSide {
+	float: left;
+	width: 500px;
+	margin-left: 20px;
+	border: 1px solid #000;
+	padding: 20px;
+	border-radius: 4px;
+}
+.leftSide select {
+	width: 250px;
+	height: 30px;
+	border-radius: 2px;
+	display: block;
+	margin-bottom: 20px;
+}
+.leftSide select:last-of-type {
+	margin-bottom: 0;
+}
+.rightSide {
+	float: right;
+	width: 500px;
+	margin-right: 20px;
+	border: 1px solid #000;
+	padding: 20px;
+	border-radius: 4px;
+	min-height: 185px;
+}
+.rightSide ul {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+.rightSide ul li {
+	margin-bottom: 5px;
+}
+.rightSide ul li:last-of-type {
+	margin-bottom: 0;
+}
+.rightSide ul li h4 {
+	margin-bottom: 10px;
+}
