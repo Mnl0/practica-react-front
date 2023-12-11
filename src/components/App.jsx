@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import Select from './useSelect';
+import Select from './UseSelect';
 function App() {
 	const [region, setRegion] = useState([]);
 	const [provincia, setProvincia] = useState([]);
@@ -125,7 +125,32 @@ function App() {
 					})}
 				</ul>
 			</div>
+
+			<div className='form'>
+				<div>
+					<h2>Ingresar Calle</h2>
+					<label htmlFor="region">Region</label>
+					<input type="text" placeholder='Nombre Region' />
+
+					<label htmlFor="provincia">Provincia</label>
+					<input type="text" placeholder='Nombre Provincia' />
+
+					<label htmlFor="ciudad">Ciudad</label>
+					<input type="text" placeholder='Nombre Ciudad' />
+
+					<label htmlFor="calle">Calle</label>
+					<input type="text" placeholder='Nombre Calle' />
+				</div>
+				<div>
+
+					<button>Buscar</button>
+					<button>Editar</button>
+					<button>Crear</button>
+					<button>Eliminar</button>
+				</div>
+			</div>
 		</div>
+
 	);
 }
 
