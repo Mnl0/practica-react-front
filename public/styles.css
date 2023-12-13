@@ -54,7 +54,7 @@ body {
 }
 .form {
 	clear: both;
-	width: 400px;
+	width: 818px;
 	margin: 0 auto;
 	padding: 20px;
 	border: 1px solid #000;
@@ -67,12 +67,10 @@ body {
 .form input {
 	display: block;
 	margin-bottom: 15px;
-	margin-left: 100px;
 	height: 30px;
 }
 .form label {
-	margin-left: 100px;
 }
 .form button {
-	margin-left: 40px;
+	margin-left: 10px;
 }
