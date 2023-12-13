@@ -142,7 +142,6 @@ function App() {
 					<input type="text" placeholder='Nombre Calle' />
 				</div>
 				<div>
-
 					<button>Buscar</button>
 					<button>Editar</button>
 					<button>Crear</button>
