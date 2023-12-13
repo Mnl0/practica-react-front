@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Select from './UseSelect';
+import Input from './Input';
 function App() {
 	const [region, setRegion] = useState([]);
 	const [provincia, setProvincia] = useState([]);
@@ -10,6 +11,13 @@ function App() {
 	const [regionSelected, setRegionSelect] = useState(null);
 	const [provinciaSelected, setProvinciaSelect] = useState(null);
 	const [ciudadSelected, setCiudadSelect] = useState(null);
+
+	const [input, setInput] = useState({
+		region: '',
+		provincia: '',
+		ciudad: '',
+		calle: '',
+	})
 
 	//UseFetch('http://127.0.0.1:8000/api/direccion', setRegion)
 	//UseFetch('http://127.0.0.1:8000/api/direccion/1/provincia', setProvincia)
@@ -84,6 +92,16 @@ function App() {
 		// 	}
 		// })
 	}
+	function handleOnchange(event) {
+		const { name, value } = event.target
+		console.log(name, value)
+		setInput((prev) => {
+			return {
+				...prev,
+				[name]: value
+			}
+		})
+	}
 
 	return (
 		<div className="main">
@@ -130,16 +148,33 @@ function App() {
 				<div>
 					<h2>Ingresar Calle</h2>
 					<label htmlFor="region">Region</label>
-					<input type="text" placeholder='Nombre Region' />
-
+					<Input
+						type='text'
+						placeholder='Nombre Region'
+						onChange={handleOnchange}
+						name='region'
+					/>
 					<label htmlFor="provincia">Provincia</label>
-					<input type="text" placeholder='Nombre Provincia' />
-
+					<Input
+						type='text'
+						placeholder='Nombre Provincia'
+						onChange={handleOnchange}
+						name='provincia'
+					/>
 					<label htmlFor="ciudad">Ciudad</label>
-					<input type="text" placeholder='Nombre Ciudad' />
-
+					<Input
+						type='text'
+						placeholder='Nombre Ciudad'
+						onChange={handleOnchange}
+						name='ciudad'
+					/>
 					<label htmlFor="calle">Calle</label>
-					<input type="text" placeholder='Nombre Calle' />
+					<Input
+						type='text'
+						placeholder='Nombre Calle'
+						onChange={handleOnchange}
+						name='calle'
+					/>
 				</div>
 				<div>
 					<button>Buscar</button>
