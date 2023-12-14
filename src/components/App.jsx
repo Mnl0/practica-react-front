@@ -13,10 +13,8 @@ function App() {
 	const [ciudadSelected, setCiudadSelect] = useState(null);
 
 	const [input, setInput] = useState({
-		region: '',
-		provincia: '',
-		ciudad: '',
-		calle: '',
+		nombre: '',
+		id_ciudad: '',
 	})
 
 	//UseFetch('http://127.0.0.1:8000/api/direccion', setRegion)
@@ -29,7 +27,6 @@ function App() {
 			.then(response => response.json())
 			.then(data => setRegion(data))
 			.catch(error => console.log(error))
-
 		return () => {
 			setRegion([])
 			setProvincia([])
@@ -39,44 +36,37 @@ function App() {
 	}, [])
 
 	useEffect(() => {
-		fetch(`http://127.0.0.1:8000/api/direccion/${regionSelected}/provincia`)
-			.then(response => response.json())
-			.then(data => setProvincia(data))
-			.catch(error => console.log(error))
-
+		regionSelected &&
+			fetch(`http://127.0.0.1:8000/api/direccion/${regionSelected}/provincia`)
+				.then(response => response.json())
+				.then(data => setProvincia(data))
+				.catch(error => console.log(error))
 		return () => {
 			setProvincia([])
 			setCiudad([])
 			setCalle([])
 		}
-
 	}, [regionSelected])
 
 	useEffect(() => {
-		if (provinciaSelected) {
+		provinciaSelected &&
 			fetch(`http://127.0.0.1:8000/api/direccion/${provinciaSelected}/ciudad`)
 				.then(response => response.json())
 				.then(data => setCiudad(data))
 				.catch(error => console.log(error))
-
-			return () => {
-				setCiudad([])
-				setCalle([])
-			}
-
+		return () => {
+			setCiudad([])
+			setCalle([])
 		}
 	}, [provinciaSelected])
 
 	useEffect(() => {
-		if (ciudadSelected) {
+		ciudadSelected &&
 			fetch(`http://127.0.0.1:8000/api/direccion/${ciudadSelected}/calle`)
 				.then(response => response.json())
 				.then(data => setCalle(data))
 				.catch(error => console.log(error))
-
-			return () => setCalle([])
-		}
-
+		return () => setCalle([])
 	}, [ciudadSelected])
 
 	function handleSelect(event) {
@@ -84,7 +74,13 @@ function App() {
 		name === 'region' && setRegionSelect(value)
 		name === 'provincia' && setProvinciaSelect(value)
 		name === 'ciudad' && setCiudadSelect(value)
-
+		name === 'ciudad' &&
+			setInput((prev) => {
+				return {
+					...prev,
+					id_ciudad: value,
+				}
+			})
 		// setItemSelect((prev) => {
 		// 	return {
 		// 		...prev,
@@ -92,15 +88,29 @@ function App() {
 		// 	}
 		// })
 	}
+
 	function handleOnchange(event) {
-		const { name, value } = event.target
-		console.log(name, value)
+		const { value } = event.target
 		setInput((prev) => {
 			return {
 				...prev,
-				[name]: value
+				nombre: value
 			}
 		})
+	}
+
+	function handleSubmit() {
+		fetch(`http://127.0.0.1:8000/api/calle`, (
+			{
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify(input)
+			}
+		))
+			.then(response => response.json())
+			.then(data => console.log('nueva calle ingresada', data))
 	}
 
 	return (
@@ -131,6 +141,7 @@ function App() {
 					data={ciudad}>
 				</Select>
 			</div>
+
 			<div className='rightSide'>
 				<ul>
 					<li>
@@ -147,27 +158,6 @@ function App() {
 			<div className='form'>
 				<div>
 					<h2>Ingresar Calle</h2>
-					<label htmlFor="region">Region</label>
-					<Input
-						type='text'
-						placeholder='Nombre Region'
-						onChange={handleOnchange}
-						name='region'
-					/>
-					<label htmlFor="provincia">Provincia</label>
-					<Input
-						type='text'
-						placeholder='Nombre Provincia'
-						onChange={handleOnchange}
-						name='provincia'
-					/>
-					<label htmlFor="ciudad">Ciudad</label>
-					<Input
-						type='text'
-						placeholder='Nombre Ciudad'
-						onChange={handleOnchange}
-						name='ciudad'
-					/>
 					<label htmlFor="calle">Calle</label>
 					<Input
 						type='text'
@@ -175,11 +165,13 @@ function App() {
 						onChange={handleOnchange}
 						name='calle'
 					/>
+
 				</div>
+
 				<div>
-					<button>Buscar</button>
+					<button onClick={handleSubmit}>Crear Calle Nueva</button>
+					<button>Buscar Calle</button>
 					<button>Editar</button>
-					<button>Crear</button>
 					<button>Eliminar</button>
 				</div>
 			</div>

@@ -1,7 +1,5 @@
 import { useEffect } from 'react';
-
 function UseFetch(url, seteo, dependencia) {
-
 	useEffect(() => {
 		fetch(url)
 			.then(response => response.json())
@@ -9,10 +7,8 @@ function UseFetch(url, seteo, dependencia) {
 			.catch(error => console.log(error))
 
 	}, [dependencia])
-
 	return () => {
 		seteo([])
 	}
 }
-
 export default UseFetch;
