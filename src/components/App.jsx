@@ -17,6 +17,8 @@ function App() {
 		id_ciudad: '',
 	})
 
+	let direccion = {};
+
 	//UseFetch('http://127.0.0.1:8000/api/direccion', setRegion)
 	//UseFetch('http://127.0.0.1:8000/api/direccion/1/provincia', setProvincia)
 	//UseFetch('http://127.0.0.1:8000/api/direccion/1/ciudad', setCiudad)
@@ -90,7 +92,7 @@ function App() {
 	}
 
 	function handleOnchange(event) {
-		const { value } = event.target
+		const { name, value } = event.target
 		setInput((prev) => {
 			return {
 				...prev,
@@ -99,7 +101,7 @@ function App() {
 		})
 	}
 
-	function handleSubmit() {
+	function CrearCalle() {
 		fetch(`http://127.0.0.1:8000/api/calle`, (
 			{
 				method: 'POST',
@@ -111,6 +113,69 @@ function App() {
 		))
 			.then(response => response.json())
 			.then(data => console.log('nueva calle ingresada', data))
+	}
+
+	const dir = async () => {
+		const calle = await fetch(`http://127.0.0.1:8000/api/calle/${input.nombre}`)
+		const calleData = await calle.json()
+		direccion = {
+			...direccion,
+			calle: calleData.nombre,
+			calleId: calleData.id,
+			ciudadId: calleData.id_ciudad,
+		}
+		const ciudad = await fetch(`http://127.0.0.1:8000/api/ciudad/${direccion.ciudadId}`)
+		const ciudadData = await ciudad.json()
+		direccion = {
+			...direccion,
+			ciudad: ciudadData.nombre,
+			provinciaId: ciudadData.id_provincia,
+		}
+		const provincia = await fetch(`http://127.0.0.1:8000/api/provincia/${direccion.provinciaId}`)
+		const provinciaData = await provincia.json()
+		direccion = {
+			...direccion,
+			provincia: provinciaData.nombre,
+			regionId: provinciaData.id_region,
+		}
+		const region = await fetch(`http://127.0.0.1:8000/api/provincia/${direccion.provinciaId}`)
+		const regionData = await region.json()
+		direccion = {
+			...direccion,
+			region: regionData.nombre,
+			regionId: regionData.id_region,
+		}
+		console.log('direccion buscada', direccion)
+		return direccion
+	}
+
+	function editarCalle() {
+		let calleEdit = {
+			nombreNuevo: input.nombre,
+			id: direccion.calleId,
+		};
+		console.log('calle', calleEdit)
+		fetch(`http://127.0.0.1:8000/api/calle/${calleEdit.id}`, {
+			method: 'PUT',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(calleEdit)
+		})
+			.then(response => response.json())
+			.then(data => console.log('calle editada', data))
+	}
+
+	function eliminarCalle() {
+		let calleDelete = direccion.calleId;
+		fetch(`http://127.0.0.1:8000/api/calle/${calleDelete}`, {
+			method: 'DELETE',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+		})
+			.then(response => response.json())
+			.then(data => console.log('calle eliminada', data))
 	}
 
 	return (
@@ -157,22 +222,27 @@ function App() {
 
 			<div className='form'>
 				<div>
-					<h2>Ingresar Calle</h2>
+					<h3>primero debe seleccionar una ciudad del select Calle</h3>
 					<label htmlFor="calle">Calle</label>
 					<Input
 						type='text'
 						placeholder='Nombre Calle'
 						onChange={handleOnchange}
-						name='calle'
+						name='calleCrear'
 					/>
-
+					<button onClick={CrearCalle}>Crear Calle Nueva</button>
 				</div>
 
 				<div>
-					<button onClick={handleSubmit}>Crear Calle Nueva</button>
-					<button>Buscar Calle</button>
-					<button>Editar</button>
-					<button>Eliminar</button>
+					<h3>Buscar Calle</h3>
+					<label htmlFor="calle">Calle a buscar</label>
+					<Input
+						type='text'
+						placeholder='Nombre Calle'
+						onChange={handleOnchange}
+						name='calleBuscar'
+					/>
+					<button onClick={dir}>Buscar Calle</button>
 				</div>
 			</div>
 		</div>
